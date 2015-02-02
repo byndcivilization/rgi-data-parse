@@ -9,6 +9,8 @@
 #############################
 from xlrd import open_workbook
 from sys import argv, exit
+from parser import parse
+from pprint import pprint
 
 
 
@@ -55,11 +57,9 @@ def main(argv):
 
 	# Iterate through sheets
 	for sheet in sheet_names:
-		print wb.sheet_by_name(sheet)
-		print sheet
-	
+		parse(sheet,wb.sheet_by_name(sheet),data)
 
-
+	pprint(data)
 	# run through sheets of workbook
 	# for sheet in wb.sheets():
 	# 	print sheet
