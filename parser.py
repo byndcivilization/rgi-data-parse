@@ -34,7 +34,7 @@ def parse(sheet_name, sheet, data):
 			pass
 		else:
 			# data[-1][rkey[col].replace(" ", "_")] = a
-			data[-1]['order'] = a
+			data[-1]['order'] = int(a)
 
 		# row_id
 		col = lkey['row_id']
@@ -60,30 +60,6 @@ def parse(sheet_name, sheet, data):
 		else:
 			data[-1][rkey[col].replace(" ", "_")] = a
 
-		# uid
-		col = lkey['uid']
-		a = get_cell(sheet,row,col)
-		if not a:
-			pass
-		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
-			
-		# qid
-		col = lkey['qid']
-		a = get_cell(sheet,row,col)
-		if not a:
-			pass
-		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
-			
-		# indaba_question_order
-		col = lkey['indaba_question_order']
-		a = get_cell(sheet,row,col)
-		if not a:
-			pass
-		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
-			
 		# component
 		col = lkey['component']
 		a = get_cell(sheet,row,col)
@@ -109,15 +85,15 @@ def parse(sheet_name, sheet, data):
 			pass
 		else:
 			data[-1][rkey[col].replace(" ", "_")] = a
-			
+
 		# minstry_if_applicable
 		col = lkey['minstry_if_applicable']
 		a = get_cell(sheet,row,col)
 		if not a:
-			pass
+			data[-1]['ministry'] = 'none'
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
-			
+			data[-1]['ministry'] = a
+
 		# section_name
 		col = lkey['section_name']
 		a = get_cell(sheet,row,col)
@@ -125,7 +101,7 @@ def parse(sheet_name, sheet, data):
 			pass
 		else:
 			data[-1][rkey[col].replace(" ", "_")] = a
-			
+
 		# parent_question
 		col = lkey['parent_question']
 		a = get_cell(sheet,row,col)
@@ -186,6 +162,38 @@ def parse(sheet_name, sheet, data):
 		else:
 			data[-1][rkey[col].replace(" ", "_")] = a
 			data[-1]['options'] += 1
+
+		# NRC Precept
+		col = lkey['nrc_precept']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a
+			
+		# # uid
+		# col = lkey['uid']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	pass
+		# else:
+		# 	data[-1][rkey[col].replace(" ", "_")] = a
+			
+		# # qid
+		# col = lkey['qid']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	pass
+		# else:
+		# 	data[-1][rkey[col].replace(" ", "_")] = a
+			
+		# # indaba_question_order
+		# col = lkey['indaba_question_order']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	pass
+		# else:
+		# 	data[-1][rkey[col].replace(" ", "_")] = a
 			
 		# # Reason for Inclusion 
 		# col = lkey['']
@@ -194,14 +202,6 @@ def parse(sheet_name, sheet, data):
 		# 	pass
 		# else:
 		# 	data[-1][rkey[col].replace(" ", "_")] = a
-			
-		# NRC Precept
-		col = lkey['nrc_precept']
-		a = get_cell(sheet,row,col)
-		if not a:
-			pass
-		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
 			
 		# # EITI
 		# col = lkey['eiti']
@@ -227,13 +227,13 @@ def parse(sheet_name, sheet, data):
 		# else:
 		# 	data[-1][rkey[col].replace(" ", "_")] = a
 			
-		# 1= New, 2= Changed, 3=Answer needs fixing, 4= Needs revision, 5=delete
-		col = lkey['1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete']
-		a = get_cell(sheet,row,col)
-		if not a:
-			data[-1]['0=unchanged,_1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete'] = '0'
-		else:
-			data[-1]['0=unchanged,_1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete'] = a
+		# # 1= New, 2= Changed, 3=Answer needs fixing, 4= Needs revision, 5=delete
+		# col = lkey['1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	data[-1]['0=unchanged,_1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete'] = '0'
+		# else:
+		# 	data[-1]['0=unchanged,_1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete'] = a
 			
 		# # Scoring (e.g. ordinal, cardinal, binary, other)
 		# col = lkey['scoring_(e.g._ordinal,_cardinal,_binary,_other)']
@@ -251,10 +251,10 @@ def parse(sheet_name, sheet, data):
 		# else:
 		# 	data[-1][rkey[col].replace(" ", "_")] = a
 			
-		# Government effectiveness (excluding disclosure)
-		col = lkey['government_effectiveness_(excluding_disclosure)']
-		a = get_cell(sheet,row,col)
-		if not a:
-			pass
-		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
+		# # Government effectiveness (excluding disclosure)
+		# col = lkey['government_effectiveness_(excluding_disclosure)']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	pass
+		# else:
+		# 	data[-1][rkey[col].replace(" ", "_")] = a
