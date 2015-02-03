@@ -1,5 +1,8 @@
 #!/usr/bin/python
-
+#############################
+###  
+### 
+#############################
 # from xlrd import cellname
 # import re
 # from datetime import datetime
@@ -10,11 +13,11 @@ from utils import get_cell
 def parse(sheet_name, sheet, data):
 	# create row and label dict on header
 	labels = sheet.row(0)
-	lkey = { str(labels[i]).replace("text:u","").replace("'","").lower(): i for i in range(0, len(labels)) }
+	lkey = { str(labels[i]).replace("text:u","").replace("'","").replace(" ","_").lower(): i for i in range(0, len(labels)) }
 	rkey = {}
 	for key in lkey:
 		rkey[lkey[key]] = key
-	
+	# pprint(lkey)
 	# get number of rows
 	nrows = sheet.nrows
 	ncols = len(labels)
@@ -92,7 +95,7 @@ def parse(sheet_name, sheet, data):
 		data[-1]['component'] = sheet_name
 
 		# indicator_name
-		col = lkey['component']
+		col = lkey['indicator_name']
 		a = get_cell(sheet,row,col)
 		if not a:
 			pass
@@ -100,60 +103,158 @@ def parse(sheet_name, sheet, data):
 			data[-1][rkey[col].replace(" ", "_")] = a
 
 		# sub_indicator_name
-		col = lkey['component']
+		col = lkey['sub_indicator_name']
 		a = get_cell(sheet,row,col)
 		if not a:
 			pass
 		else:
 			data[-1][rkey[col].replace(" ", "_")] = a
 			
-		# Minstry_if_applicable
-		col = lkey['Minstry_if_applicable']
+		# minstry_if_applicable
+		col = lkey['minstry_if_applicable']
 		a = get_cell(sheet,row,col)
 		if not a:
 			pass
 		else:
-			data[-1]['component_excel'] = a
+			data[-1][rkey[col].replace(" ", "_")] = a
 			
 		# section_name
+		col = lkey['section_name']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a
+			
 		# parent_question
+		col = lkey['parent_question']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a
+			
 		# child_question
+		col = lkey['child_question']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a
+			
 		# choice_1
+		col = lkey['choice_1']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['options'] = 1
+			
 		# choice_2
+		col = lkey['choice_2']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['options'] += 1
+			
 		# choice_3
+		col = lkey['choice_3']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['options'] += 1
+			
 		# choice_4
+		col = lkey['choice_4']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['options'] += 1
+			
 		# choice_5
-		# Reason for Inclusion 
+		col = lkey['choice_5']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['options'] += 1
+			
+		# # Reason for Inclusion 
+		# col = lkey['']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	pass
+		# else:
+		# 	data[-1][rkey[col].replace(" ", "_")] = a
+			
 		# NRC Precept
-		# EITI
-		# Comments
-		# Proposed changes
+		col = lkey['nrc_precept']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a
+			
+		# # EITI
+		# col = lkey['eiti']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	pass
+		# else:
+		# 	data[-1][rkey[col].replace(" ", "_")] = a
+			
+		# # Comments
+		# col = lkey['comments']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	pass
+		# else:
+		# 	data[-1][rkey[col].replace(" ", "_")] = a
+			
+		# # Proposed changes
+		# col = lkey['proposed_changes']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	pass
+		# else:
+		# 	data[-1][rkey[col].replace(" ", "_")] = a
+			
 		# 1= New, 2= Changed, 3=Answer needs fixing, 4= Needs revision, 5=delete
-		# Scoring (e.g. ordinal, cardinal, binary, other)
-		# De facto/De jure
+		col = lkey['1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete']
+		a = get_cell(sheet,row,col)
+		if not a:
+			data[-1]['0=unchanged,_1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete'] = '0'
+		else:
+			data[-1]['0=unchanged,_1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete'] = a
+			
+		# # Scoring (e.g. ordinal, cardinal, binary, other)
+		# col = lkey['scoring_(e.g._ordinal,_cardinal,_binary,_other)']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	pass
+		# else:
+		# 	data[-1][rkey[col].replace(" ", "_")] = a
+			
+		# # De facto/De jure
+		# col = lkey['de_facto/de_jure']
+		# a = get_cell(sheet,row,col)
+		# if not a:
+		# 	pass
+		# else:
+		# 	data[-1][rkey[col].replace(" ", "_")] = a
+			
 		# Government effectiveness (excluding disclosure)
-
-
-
-		# for col in range(0, ncols):
-
-		# 	a = get_cell(sheet,row,col)
-		# 	if not a:
-		# 		pass
-		# 	else:
-		# 		data[-1][rkey[col].replace(" ", "_")] = a
-			# print rkey[cell_index].replace(" ", "_")
-
-	# 	# UID
-	# 	a = get_cell(sheet,'UID',row,lkey)
-	# 	if a:
-	# 		data[-1]['uid'] = a
-
-
-	# print sheet_name
-	# print sheet
-	# print data
-
-
-
-
+		col = lkey['government_effectiveness_(excluding_disclosure)']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1][rkey[col].replace(" ", "_")] = a

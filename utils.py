@@ -1,6 +1,11 @@
 #!/usr/bin/python
+#############################
+###  
+### 
+#############################
 
 from xlrd import cellname
+import json
 
 
 # gets value from row
@@ -15,3 +20,8 @@ def get_cell(sheet, row, col):
 		pass
 	else:
 		return val.encode('utf8').strip()
+
+def write_json(data, file_name):
+	print_out = open(file_name, "w")
+	print_out.write(json.dumps(data, indent=4, separators=(',', ':')))
+	print_out.close()

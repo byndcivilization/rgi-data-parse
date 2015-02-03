@@ -11,6 +11,7 @@ from xlrd import open_workbook
 from sys import argv, exit
 from parser import parse
 from pprint import pprint
+from utils import write_json
 
 
 
@@ -57,9 +58,18 @@ def main(argv):
 
 	# Iterate through sheets
 	for sheet in sheet_names:
-		parse(sheet,wb.sheet_by_name(sheet),data)
+		parse(sheet.encode('utf-8').lower(),wb.sheet_by_name(sheet),data)
 
-	pprint(data)
+
+	write_json(data, dest)
+
+
+
+
+
+
+
+	# print sheet_names
 	# run through sheets of workbook
 	# for sheet in wb.sheets():
 	# 	print sheet
@@ -73,9 +83,6 @@ def main(argv):
 	# 	print "Usage: %s file.xlsx [outfile]"
 	# 	exit
 
-	# print_out = open(outfile, "w")
-	# print_out.write(json.dumps(data, indent=4, separators=(',', ':')))
-	# print_out.close()
 
 	# # load into mongo i
 	# if username != '':
