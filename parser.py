@@ -5,7 +5,7 @@
 #############################
 # from xlrd import cellname
 # import re
-# from datetime import datetime
+from datetime import datetime
 from pprint import pprint
 from utils import get_cell
 
@@ -18,14 +18,19 @@ def parse(sheet_name, sheet, data):
 	for key in lkey:
 		rkey[lkey[key]] = key
 	# pprint(lkey)
+
 	# get number of rows
 	nrows = sheet.nrows
 	ncols = len(labels)
 
+	# 
+	sheet_text = sheet_name
+	sheet_id = sheet_name.encode('utf-8').lower()
+
 	for row in range(1, nrows):
 
 		# create document for each non-empty row
-		data.append({})
+		data.append({'old_reference' : {}, 'question_choices' : [], 'modified' : []})
 
 		# row_id_current
 		col = lkey['row_id_current']
@@ -34,7 +39,7 @@ def parse(sheet_name, sheet, data):
 			pass
 		else:
 			# data[-1][rkey[col].replace(" ", "_")] = a
-			data[-1]['order'] = int(a)
+			data[-1]['question_order'] = int(a)
 
 		# row_id
 		col = lkey['row_id']
@@ -42,7 +47,7 @@ def parse(sheet_name, sheet, data):
 		if not a:
 			pass
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
 
 		# row_id_org
 		col = lkey['row_id_org']
@@ -50,7 +55,7 @@ def parse(sheet_name, sheet, data):
 		if not a:
 			pass
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
 
 		# old_rwi_questionnaire_code
 		col = lkey['old_rwi_questionnaire_code']
@@ -58,7 +63,31 @@ def parse(sheet_name, sheet, data):
 		if not a:
 			pass
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
+
+		# uid
+		col = lkey['uid']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
+			
+		# qid
+		col = lkey['qid']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
+			
+		# indaba_question_order
+		col = lkey['indaba_question_order']
+		a = get_cell(sheet,row,col)
+		if not a:
+			pass
+		else:
+			data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
 
 		# component
 		col = lkey['component']
@@ -66,9 +95,11 @@ def parse(sheet_name, sheet, data):
 		if not a:
 			pass
 		else:
-			data[-1]['component_excel'] = a
+			data[-1]['old_reference']['component_excel'] = a
 
-		data[-1]['component'] = sheet_name
+		data[-1]['component'] = sheet_id
+		data[-1]['component_text'] = sheet_text
+
 
 		# indicator_name
 		col = lkey['indicator_name']
@@ -108,7 +139,7 @@ def parse(sheet_name, sheet, data):
 		if not a:
 			pass
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['question_text'] = a
 			
 		# child_question
 		col = lkey['child_question']
@@ -117,14 +148,14 @@ def parse(sheet_name, sheet, data):
 			pass
 		else:
 			data[-1][rkey[col].replace(" ", "_")] = a
-			
+		
 		# choice_1
 		col = lkey['choice_1']
 		a = get_cell(sheet,row,col)
 		if not a:
 			pass
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
 			data[-1]['options'] = 1
 			
 		# choice_2
@@ -133,7 +164,7 @@ def parse(sheet_name, sheet, data):
 		if not a:
 			pass
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
 			data[-1]['options'] += 1
 			
 		# choice_3
@@ -142,7 +173,7 @@ def parse(sheet_name, sheet, data):
 		if not a:
 			pass
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
 			data[-1]['options'] += 1
 			
 		# choice_4
@@ -151,7 +182,7 @@ def parse(sheet_name, sheet, data):
 		if not a:
 			pass
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
 			data[-1]['options'] += 1
 			
 		# choice_5
@@ -160,7 +191,7 @@ def parse(sheet_name, sheet, data):
 		if not a:
 			pass
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
 			data[-1]['options'] += 1
 
 		# NRC Precept
@@ -169,31 +200,9 @@ def parse(sheet_name, sheet, data):
 		if not a:
 			pass
 		else:
-			data[-1][rkey[col].replace(" ", "_")] = a
-			
-		# # uid
-		# col = lkey['uid']
-		# a = get_cell(sheet,row,col)
-		# if not a:
-		# 	pass
-		# else:
-		# 	data[-1][rkey[col].replace(" ", "_")] = a
-			
-		# # qid
-		# col = lkey['qid']
-		# a = get_cell(sheet,row,col)
-		# if not a:
-		# 	pass
-		# else:
-		# 	data[-1][rkey[col].replace(" ", "_")] = a
-			
-		# # indaba_question_order
-		# col = lkey['indaba_question_order']
-		# a = get_cell(sheet,row,col)
-		# if not a:
-		# 	pass
-		# else:
-		# 	data[-1][rkey[col].replace(" ", "_")] = a
+			data[-1][rkey[col].replace(" ", "_")] = int(a)
+
+		data[-1]['question_choices'].append({'modifiedBy' : 'initiated', 'modifiedDate' : datetime.now().isoformat()})
 			
 		# # Reason for Inclusion 
 		# col = lkey['']

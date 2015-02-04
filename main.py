@@ -12,6 +12,7 @@ from sys import argv, exit
 from parser import parse
 from pprint import pprint
 from utils import write_json
+from loader import mongo_load
 
 
 
@@ -44,11 +45,11 @@ def main(argv):
 
 
 	# # get authentication for mongodb instance
-	# username = raw_input('Enter your MongoDB username [empty for no db]: ')
-	# if username != '':
-	# 	password = raw_input('Enter your MongoDB password: ')
-	# 	db = raw_input('Enter MongoDB you want to insert into: ')
-	# 	collection = raw_input('Enter ' + db + '.collection you want to insert into: ')
+	username = raw_input('Enter your MongoDB username [empty for no db]: ')
+	if username != '':
+		password = raw_input('Enter your MongoDB password: ')
+		db = raw_input('Enter MongoDB you want to insert into: ')
+		collection = raw_input('Enter ' + db + '.collection you want to insert into: ')
 
 	data = []
 
@@ -57,10 +58,12 @@ def main(argv):
 
 	# Iterate through sheets
 	for sheet in sheet_names:
-		parse(sheet.encode('utf-8').lower(),wb.sheet_by_name(sheet),data)
+		parse(sheet,wb.sheet_by_name(sheet),data)
 
 	# Write out local json file
 	write_json(data, dest)
+
+	# mongo_load(data,db_name,collection_name,username,password)
 
 	# load into mongo 
 	if username != '':

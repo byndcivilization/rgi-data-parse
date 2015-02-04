@@ -27,7 +27,3 @@ def mongo_load(data,db_name,collection_name,username,password):
 	
 	except:
 		print "Wrong username or password!"
-
-
-if __name__ == '__main__':
-	mongo_load(data,db_name,collection_name,username,password)
