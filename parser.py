@@ -25,12 +25,12 @@ def parse(sheet_name, sheet, data):
 
 	# 
 	sheet_text = sheet_name
-	sheet_id = sheet_name.encode('utf-8').lower()
+	sheet_id = sheet_name.encode('utf-8').lower().replace(" ","_")
 
 	for row in range(1, nrows):
 
 		# create document for each non-empty row
-		data.append({'old_reference' : {}, 'question_choices' : [], 'modified' : []})
+		data.append({'old_reference' : {}, 'question_choices' : [], 'modified' : [], 'comments' : []})
 
 		# row_id_current
 		col = lkey['row_id_current']
@@ -40,6 +40,7 @@ def parse(sheet_name, sheet, data):
 		else:
 			# data[-1][rkey[col].replace(" ", "_")] = a
 			data[-1]['question_order'] = int(a)
+
 
 			# row_id
 			col = lkey['row_id']
@@ -194,6 +195,15 @@ def parse(sheet_name, sheet, data):
 				data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
 				data[-1]['options'] += 1
 
+			# Reason for Inclusion 
+			col = lkey['reason_for_inclusion']
+			a = get_cell(sheet,row,col)
+			if not a:
+				pass
+			else:
+				data[-1]['comments'].append({'date' : datetime.utcnow(), 'content' : a, 'author' : 'excel_reason', 'author_name' : 'From Excel file \'reason for inclusion\' column.'})
+				# data[-1]['comments'].append({'content' : a, 'author' : 'excel_reason', 'author_name' : 'From Excel file \'reason for inclusion\' column.'})
+				
 			# NRC Precept
 			col = lkey['nrc_precept']
 			a = get_cell(sheet,row,col)
@@ -202,39 +212,43 @@ def parse(sheet_name, sheet, data):
 			else:
 				data[-1][rkey[col].replace(" ", "_")] = int(a)
 
-			data[-1]['modified'].append({'modifiedBy' : 'initiated', 'modifiedDate' : '' + datetime.now().isoformat()})
-				
-			# # Reason for Inclusion 
-			# col = lkey['']
-			# a = get_cell(sheet,row,col)
-			# if not a:
-			# 	pass
-			# else:
-			# 	data[-1][rkey[col].replace(" ", "_")] = a
-				
-			# # EITI
-			# col = lkey['eiti']
-			# a = get_cell(sheet,row,col)
-			# if not a:
-			# 	pass
-			# else:
-			# 	data[-1][rkey[col].replace(" ", "_")] = a
+			# EITI
+			col = lkey['eiti']
+			a = get_cell(sheet,row,col)
+			if not a:
+				pass
+			else:
+				data[-1]['comments'].append({'date' : datetime.utcnow(), 'content' : a, 'author' : 'excel_eiti', 'author_name' : 'From Excel file \'EITI\' column.'})
+				# data[-1]['comments'].append({'content' : a, 'author' : 'excel_eiti', 'author_name' : 'From Excel file \'EITI\' column.'})
 				
 			# # Comments
-			# col = lkey['comments']
-			# a = get_cell(sheet,row,col)
-			# if not a:
-			# 	pass
-			# else:
-			# 	data[-1][rkey[col].replace(" ", "_")] = a
+			col = lkey['comments']
+			a = get_cell(sheet,row,col)
+			if not a:
+				pass
+			else:
+				data[-1]['comments'].append({'date' : datetime.utcnow(), 'content' : a, 'author' : 'excel_comments', 'author_name' : 'From Excel file \'Comments\' column.'})
+				# data[-1]['comments'].append({'content' : a, 'author' : 'excel_comments', 'author_name' : 'From Excel file \'Comments\' column.'})
 				
-			# # Proposed changes
-			# col = lkey['proposed_changes']
-			# a = get_cell(sheet,row,col)
-			# if not a:
-			# 	pass
-			# else:
-			# 	data[-1][rkey[col].replace(" ", "_")] = a
+			# Proposed changes
+			col = lkey['proposed_changes']
+			a = get_cell(sheet,row,col)
+			if not a:
+				pass
+			else:
+				data[-1]['comments'].append({'date' : datetime.utcnow(), 'content' : a, 'author' : 'excel_proposed', 'author_name' : 'From Excel file \'proposed changes\' column.'})
+				# data[-1]['comments'].append({'content' : a, 'author' : 'excel_proposed', 'author_name' : 'From Excel file \'proposed changes\' column.'})
+				
+			data[-1]['modified'].append({'modifiedBy' : 'initiated', 'modifiedDate' : datetime.utcnow()})
+
+				
+
+# 1= New, 2= Changed, 3=Answer needs fixing, 4= Needs revision, 5=delete
+# Scoring (e.g. ordinal, cardinal, binary, other)
+# De facto/De jure
+# Government effectiveness (excluding disclosure)				
+		
+
 				
 			# # 1= New, 2= Changed, 3=Answer needs fixing, 4= Needs revision, 5=delete
 			# col = lkey['1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete']
@@ -267,3 +281,5 @@ def parse(sheet_name, sheet, data):
 			# 	pass
 			# else:
 			# 	data[-1][rkey[col].replace(" ", "_")] = a
+
+

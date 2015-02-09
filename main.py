@@ -60,8 +60,9 @@ def main(argv):
 	for sheet in sheet_names:
 		parse(sheet,wb.sheet_by_name(sheet),data)
 
+	###NEED TO WORK ON THIS...BSON DATE IS THROWING TYPE ERROR
 	# Write out local json file
-	write_json(data, dest)
+	# write_json(data, dest)
 
 	# mongo_load(data,db_name,collection_name,username,password)
 

@@ -21,7 +21,13 @@ def get_cell(sheet, row, col):
 	else:
 		return val.encode('utf8').strip()
 
+def set_default(obj):
+    if isinstance(obj, set):
+        return list(obj)
+    raise TypeError
+
 def write_json(data, file_name):
 	print_out = open(file_name, "w")
-	print_out.write(json.dumps(data, indent=4, separators=(',', ':')))
+	print_out.write(json.dumps(data, indent=4, separators=(',', ':'),default=set_default))
 	print_out.close()
+
