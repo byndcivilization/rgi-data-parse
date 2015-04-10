@@ -1,285 +1,280 @@
 #!/usr/bin/python
-#############################
-###  
-### 
-#############################
+"""Parses excel sheets into JSON"""
+
+from datetime import datetime
+from utils import get_cell
 # from xlrd import cellname
 # import re
-from datetime import datetime
-from pprint import pprint
-from utils import get_cell
-
+# from pprint import pprint
 
 def parse(sheet_name, sheet, data):
-	# create row and label dict on header
-	labels = sheet.row(0)
-	lkey = { str(labels[i]).replace("text:u","").replace("'","").replace(" ","_").lower(): i for i in range(0, len(labels)) }
-	rkey = {}
-	for key in lkey:
-		rkey[lkey[key]] = key
-	# pprint(lkey)
+    """Main parsing function"""
+    # create row and label dict on header
+    labels = sheet.row(0)
+    lkey = {str(labels[i])\
+    .replace("text:u", "")\
+    .replace("'", "")\
+    .replace(" ", "_")\
+    .lower():\
+    i for i in range(0, len(labels))}
 
-	# get number of rows
-	nrows = sheet.nrows
-	ncols = len(labels)
+    rkey = {}
+    for key in lkey:
+        rkey[lkey[key]] = key
 
-	# 
-	sheet_text = sheet_name
-	sheet_id = sheet_name.encode('utf-8').lower().replace(" ","_")
-
-	for row in range(1, nrows):
-
-		# create document for each non-empty row
-		data.append({'old_reference' : {}, 'question_choices' : [], 'modified' : [], 'comments' : []})
-
-		# row_id_current
-		col = lkey['row_id_current']
-		a = get_cell(sheet,row,col)
-		if not a:
-			pass
-		else:
-			# data[-1][rkey[col].replace(" ", "_")] = a
-			data[-1]['question_order'] = int(a)
+    # get number of rows
+    nrows = sheet.nrows
+    # ncols = len(labels)
 
 
-			# row_id
-			col = lkey['row_id']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
+    sheet_text = sheet_name
+    sheet_id = sheet_name.encode('utf-8').lower().replace(" ", "_")
 
-			# row_id_org
-			col = lkey['row_id_org']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
+    for row in range(1, nrows):
 
-			# old_rwi_questionnaire_code
-			col = lkey['old_rwi_questionnaire_code']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
+        # create document for each non-empty row
+        data.append({
+            'old_reference' : {},
+            'question_choices': [],
+            'modified': [],
+            'comments': []
+            })
 
-			# uid
-			col = lkey['uid']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
-				
-			# qid
-			col = lkey['qid']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
-				
-			# indaba_question_order
-			col = lkey['indaba_question_order']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['old_reference'][rkey[col].replace(" ", "_")] = a
-
-			# component
-			col = lkey['component']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['old_reference']['component_excel'] = a
-
-			data[-1]['component'] = sheet_id
-			data[-1]['component_text'] = sheet_text
+        # row_id_current
+        col = lkey['row_id_current']
+        val = get_cell(sheet, row, col)
+        if not val:
+            pass
+        else:
+            # data[-1][rkey[col].replace(" ", "_")] = val
+            data[-1]['question_order'] = int(val)
 
 
-			# indicator_name
-			col = lkey['indicator_name']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1][rkey[col].replace(" ", "_")] = a
+            # row_id
+            col = lkey['row_id']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['old_reference'][rkey[col].replace(" ", "_")] = val
 
-			# sub_indicator_name
-			col = lkey['sub_indicator_name']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1][rkey[col].replace(" ", "_")] = a
+            # row_id_org
+            col = lkey['row_id_org']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['old_reference'][rkey[col].replace(" ", "_")] = val
 
-			# minstry_if_applicable
-			col = lkey['minstry_if_applicable']
-			a = get_cell(sheet,row,col)
-			if not a:
-				data[-1]['ministry'] = 'none'
-			else:
-				data[-1]['ministry'] = a
+            # old_rwi_questionnaire_code
+            col = lkey['old_rwi_questionnaire_code']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['old_reference'][rkey[col].replace(" ", "_")] = val
 
-			# section_name
-			col = lkey['section_name']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1][rkey[col].replace(" ", "_")] = a
+            # uid
+            col = lkey['uid']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['old_reference'][rkey[col].replace(" ", "_")] = val
+                
+            # qid
+            col = lkey['qid']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['old_reference'][rkey[col].replace(" ", "_")] = val
+                
+            # indaba_question_order
+            col = lkey['indaba_question_order']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['old_reference'][rkey[col].replace(" ", "_")] = val
 
-			# parent_question
-			col = lkey['parent_question']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['question_text'] = a
-				
-			# child_question
-			col = lkey['child_question']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1][rkey[col].replace(" ", "_")] = a
-			
-			# choice_1
-			col = lkey['choice_1']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
-				data[-1]['options'] = 1
-				
-			# choice_2
-			col = lkey['choice_2']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
-				data[-1]['options'] += 1
-				
-			# choice_3
-			col = lkey['choice_3']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
-				data[-1]['options'] += 1
-				
-			# choice_4
-			col = lkey['choice_4']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
-				data[-1]['options'] += 1
-				
-			# choice_5
-			col = lkey['choice_5']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['question_choices'].append({'name' : rkey[col], 'order' : int(rkey[col].replace("choice_", "")), 'criteria' : a})
-				data[-1]['options'] += 1
+            # component
+            col = lkey['component']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['old_reference']['component_excel'] = val
 
-			# Reason for Inclusion 
-			col = lkey['reason_for_inclusion']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['comments'].append({'date' : datetime.utcnow(), 'content' : a, 'author' : 'excel_reason', 'author_name' : 'From Excel file \'reason for inclusion\' column.'})
-				# data[-1]['comments'].append({'content' : a, 'author' : 'excel_reason', 'author_name' : 'From Excel file \'reason for inclusion\' column.'})
-				
-			# NRC Precept
-			col = lkey['nrc_precept']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1][rkey[col].replace(" ", "_")] = int(a)
-
-			# EITI
-			col = lkey['eiti']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['comments'].append({'date' : datetime.utcnow(), 'content' : a, 'author' : 'excel_eiti', 'author_name' : 'From Excel file \'EITI\' column.'})
-				# data[-1]['comments'].append({'content' : a, 'author' : 'excel_eiti', 'author_name' : 'From Excel file \'EITI\' column.'})
-				
-			# # Comments
-			col = lkey['comments']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['comments'].append({'date' : datetime.utcnow(), 'content' : a, 'author' : 'excel_comments', 'author_name' : 'From Excel file \'Comments\' column.'})
-				# data[-1]['comments'].append({'content' : a, 'author' : 'excel_comments', 'author_name' : 'From Excel file \'Comments\' column.'})
-				
-			# Proposed changes
-			col = lkey['proposed_changes']
-			a = get_cell(sheet,row,col)
-			if not a:
-				pass
-			else:
-				data[-1]['comments'].append({'date' : datetime.utcnow(), 'content' : a, 'author' : 'excel_proposed', 'author_name' : 'From Excel file \'proposed changes\' column.'})
-				# data[-1]['comments'].append({'content' : a, 'author' : 'excel_proposed', 'author_name' : 'From Excel file \'proposed changes\' column.'})
-				
-			data[-1]['modified'].append({'modifiedBy' : 'initiated', 'modifiedDate' : datetime.utcnow()})
-
-				
-
-# 1= New, 2= Changed, 3=Answer needs fixing, 4= Needs revision, 5=delete
-# Scoring (e.g. ordinal, cardinal, binary, other)
-# De facto/De jure
-# Government effectiveness (excluding disclosure)				
-		
-
-				
-			# # 1= New, 2= Changed, 3=Answer needs fixing, 4= Needs revision, 5=delete
-			# col = lkey['1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete']
-			# a = get_cell(sheet,row,col)
-			# if not a:
-			# 	data[-1]['0=unchanged,_1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete'] = '0'
-			# else:
-			# 	data[-1]['0=unchanged,_1=_new,_2=_changed,_3=answer_needs_fixing,_4=_needs_revision,_5=delete'] = a
-				
-			# # Scoring (e.g. ordinal, cardinal, binary, other)
-			# col = lkey['scoring_(e.g._ordinal,_cardinal,_binary,_other)']
-			# a = get_cell(sheet,row,col)
-			# if not a:
-			# 	pass
-			# else:
-			# 	data[-1][rkey[col].replace(" ", "_")] = a
-				
-			# # De facto/De jure
-			# col = lkey['de_facto/de_jure']
-			# a = get_cell(sheet,row,col)
-			# if not a:
-			# 	pass
-			# else:
-			# 	data[-1][rkey[col].replace(" ", "_")] = a
-				
-			# # Government effectiveness (excluding disclosure)
-			# col = lkey['government_effectiveness_(excluding_disclosure)']
-			# a = get_cell(sheet,row,col)
-			# if not a:
-			# 	pass
-			# else:
-			# 	data[-1][rkey[col].replace(" ", "_")] = a
+            data[-1]['component'] = sheet_id
+            data[-1]['component_text'] = sheet_text
 
 
+            # indicator_name
+            col = lkey['indicator_name']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1][rkey[col].replace(" ", "_")] = val
+
+            # sub_indicator_name
+            col = lkey['sub_indicator_name']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1][rkey[col].replace(" ", "_")] = val
+
+            # minstry_if_applicable
+            col = lkey['minstry_if_applicable']
+            val = get_cell(sheet, row, col)
+            if not val:
+                data[-1]['ministry'] = 'none'
+            else:
+                data[-1]['ministry'] = val
+
+            # section_name
+            col = lkey['section_name']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1][rkey[col].replace(" ", "_")] = val
+
+            # parent_question
+            col = lkey['parent_question']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['question_text'] = val
+
+            # child_question
+            col = lkey['child_question']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1][rkey[col].replace(" ", "_")] = val
+
+            # choice_1
+            col = lkey['choice_1']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['question_choices']\
+                .append({'name' : rkey[col], 'order' : int(rkey[col]\
+                	.replace("choice_", "")), 'criteria' : val})
+                data[-1]['options'] = 1
+
+            # choice_2
+            col = lkey['choice_2']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['question_choices']\
+                .append({'name' : rkey[col], 'order' : int(rkey[col]\
+                	.replace("choice_", "")), 'criteria' : val})
+                data[-1]['options'] += 1
+
+            # choice_3
+            col = lkey['choice_3']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['question_choices']\
+                .append({'name' : rkey[col], 'order' : int(rkey[col]\
+                	.replace("choice_", "")), 'criteria' : val})
+                data[-1]['options'] += 1
+
+            # choice_4
+            col = lkey['choice_4']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['question_choices']\
+                .append({'name' : rkey[col], 'order' : int(rkey[col]\
+                	.replace("choice_", "")), 'criteria' : val})
+                data[-1]['options'] += 1
+
+            # choice_5
+            col = lkey['choice_5']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['question_choices']\
+                .append({'name' : rkey[col], 'order' : int(rkey[col]\
+                	.replace("choice_", "")), 'criteria' : val})
+                data[-1]['options'] += 1
+
+            # Reason for Inclusion
+            col = lkey['reason_for_inclusion']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['comments']\
+                .append({
+                	   'date' : datetime.utcnow(),
+                	   'content' : val,
+                	   'author' : 'excel_reason',
+                	   'author_name' : 'From Excel file \'reason for inclusion\' column.'
+                })
+
+            # NRC Precept
+            col = lkey['nrc_precept']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1][rkey[col].replace(" ", "_")] = int(val)
+
+            # EITI
+            col = lkey['eiti']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['comments'].append({
+                    'date' : datetime.utcnow(),
+                    'content' : val,
+                    'author' : 'excel_eiti',
+                    'author_name' : 'From Excel file \'EITI\' column.'
+                    })
+
+            # # Comments
+            col = lkey['comments']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['comments'].append({
+                    'date' : datetime.utcnow(),
+                    'content' : val,
+                    'author' : 'excel_comments',
+                    'author_name' : 'From Excel file \'Comments\' column.'
+                    })
+
+            # Proposed changes
+            col = lkey['proposed_changes']
+            val = get_cell(sheet, row, col)
+            if not val:
+                pass
+            else:
+                data[-1]['comments'].append({
+                    'date' : datetime.utcnow(),
+                    'content' : val,
+                    'author' : 'excel_proposed',
+                    'author_name' : 'From Excel file \'proposed changes\' column.'
+                    })
+
+            data[-1]['modified'].append({
+                'modifiedBy' : 'initiated',
+                'modifiedDate' : datetime.utcnow()
+                })
