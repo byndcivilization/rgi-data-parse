@@ -5,7 +5,7 @@ import json
 
 
 # gets value from row
-def get_cell(sheet, row, col):
+def get_cell(sheet, row, col, guidance=False):
     """Get excel cell value, convert floats to floats and pass missing values"""
     val = sheet.cell(row, col).value
 
@@ -15,6 +15,8 @@ def get_cell(sheet, row, col):
 
     if val == "":
         pass
+    elif guidance==True:
+        return val
     else:
         return val.encode('utf8').strip()
 
